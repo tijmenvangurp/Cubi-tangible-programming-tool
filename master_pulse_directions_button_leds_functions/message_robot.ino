@@ -132,15 +132,15 @@ void construct_message(){
       }
     case 4:
       {
-
+        // only wrong possibility is abab once there are 2 after eachother the same its ok
+        if(check_position_loop_blocks[0][1] =! check_position_loop_blocks[1][1] && check_position_loop_blocks[2][1] =! check_position_loop_blocks[3][1]){
+          error_message(check_position_loop_blocks[1][0],'B');
+          error_message(check_position_loop_blocks[3][0],'B');
+        }
 
       }
     }
   }
-
-
-
-
 
   if (slave_summary != robot_message){
     Serial.print(slave_summary);
@@ -148,7 +148,6 @@ void construct_message(){
     delayMicroseconds(100);
     robot_message = slave_summary;
   }
-
 
   // Serial.print(slave_summary);
   //Serial.println(freeRam());
@@ -171,6 +170,7 @@ void value_to_add(int val){
   potmeter_values_to_send [potmeter_array_counter] = val;
   potmeter_array_counter++;
 }
+
 
 
 
