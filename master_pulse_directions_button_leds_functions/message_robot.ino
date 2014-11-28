@@ -45,6 +45,10 @@ void construct_message(){
               // all even blocks will have a knob
               prepare_message(pot_array[level][count]);
             }
+            else{
+              // all odd blocks won't have a knob, but inorder that both messages are same length we ad a 0
+              prepare_message(0);
+            }
           }
           else{
             prepare_message(pot_array[level][count]);
@@ -179,6 +183,7 @@ void value_to_add(int val){
   potmeter_values_to_send [potmeter_array_counter] = val;
   potmeter_array_counter++;
 }
+
 
 
 
