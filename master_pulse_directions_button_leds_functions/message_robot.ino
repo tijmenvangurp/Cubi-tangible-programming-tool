@@ -17,6 +17,7 @@ void construct_message(){
    5000 will be the end of the message
    */
   int check_position_loop_blocks [4][1];
+  memset(check_position_loop_blocks, 0, sizeof(check_position_loop_blocks[0][0]) * 4 * 1); // clear out pot_array, fill it with zeros
   int position_loop_blocks_counter = 0;
   if(id_array[0][0] =!0){
     // we have at least one block so start message
@@ -133,7 +134,7 @@ void construct_message(){
     case 4:
       {
         // only wrong possibility is abab once there are 2 after eachother the same its ok
-        if(check_position_loop_blocks[0][1] =! check_position_loop_blocks[1][1] && check_position_loop_blocks[2][1] =! check_position_loop_blocks[3][1]){
+        if(check_position_loop_blocks[0][1] != check_position_loop_blocks[1][1] && check_position_loop_blocks[2][1] != check_position_loop_blocks[3][1]){
           error_message(check_position_loop_blocks[1][0],'B');
           error_message(check_position_loop_blocks[3][0],'B');
         }
