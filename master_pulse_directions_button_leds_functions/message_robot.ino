@@ -39,8 +39,16 @@ void construct_message(){
         if (current_id != 0) {
           slave_summary += (String)current_id;
           // potmeter value is prepared to send 
-          // todo: only add potnumbers to those blocks that have a knob         
-          prepare_message(pot_array[level][count]);
+          // todo: only add potnumbers to those blocks that have a knob 
+          if(id_catogary_block == 6 || id_catogary_block == 7){
+            if(current_id%2 == 0){
+              // all even blocks will have a knob
+              prepare_message(pot_array[level][count]);
+            }
+          }
+          else{
+            prepare_message(pot_array[level][count]);
+          }
           if(count < collums ){
             if(id_array[level][count +1 ] != 0){
               // if on the current count +1 is not 0 than ad a comma
@@ -171,6 +179,8 @@ void value_to_add(int val){
   potmeter_values_to_send [potmeter_array_counter] = val;
   potmeter_array_counter++;
 }
+
+
 
 
 
