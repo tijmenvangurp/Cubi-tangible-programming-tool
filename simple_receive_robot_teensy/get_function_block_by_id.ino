@@ -4,8 +4,8 @@ void get_function_block_by_id(byte id, int pot_value,byte current_level, boolean
   motor_assignment[0]= indication what variables there are
    2 = driving forward/backwards
    3 = turning left/right
-   4 = delay
-   5 = speed
+   4 = speed
+   5 = delay
    6 = loop a
    7 = loop b
    motor_assignment[0]= function
@@ -36,7 +36,8 @@ void get_function_block_by_id(byte id, int pot_value,byte current_level, boolean
         robot_drive_pattern[current_level][1] = 1;
         robot_drive_pattern[current_level][2] = 1;
         robot_drive_pattern[current_level][3] = time_to_drive_forward;
-        robot_drive_pattern[current_level][4] = speed_robot;
+        robot_drive_pattern[current_level][4] = speed_robot;// left motor
+        robot_drive_pattern[current_level][5] = speed_robot;// right motor
       }
       else{
         //drive backward
@@ -46,7 +47,8 @@ void get_function_block_by_id(byte id, int pot_value,byte current_level, boolean
         robot_drive_pattern[current_level][1] = 0;
         robot_drive_pattern[current_level][2] = 0;
         robot_drive_pattern[current_level][3] = time_to_drive_backward;
-        robot_drive_pattern[current_level][4] = speed_robot;
+        robot_drive_pattern[current_level][4] = speed_robot;// left motor
+        robot_drive_pattern[current_level][5] = speed_robot;// right motor
       }
       break;
     }
@@ -56,50 +58,53 @@ void get_function_block_by_id(byte id, int pot_value,byte current_level, boolean
         // drive left
         int time_to_drive_left = round(map(pot_value,begin_knob,middle_knob,max_time,min_time));
         robot_drive_pattern[current_level][0] = 3;
-        robot_drive_pattern[current_level][1] = 1;
-        robot_drive_pattern[current_level][2] = 0;
+        robot_drive_pattern[current_level][1] = 0;// left wheel backwards
+        robot_drive_pattern[current_level][2] = 1;// right wheel forwards
         robot_drive_pattern[current_level][3] = time_to_drive_left;
-        robot_drive_pattern[current_level][4] = speed_robot;
+        robot_drive_pattern[current_level][4] = speed_robot;// left motor
+        robot_drive_pattern[current_level][5] = speed_robot;// right motor
 
       }
       else{
         // drive right
         int time_to_drive_right = round(map(pot_value,middle_knob,end_knob,min_time,max_time));
         robot_drive_pattern[current_level][0] = 3;
-        robot_drive_pattern[current_level][1] = 0;
-        robot_drive_pattern[current_level][2] = 1;
+        robot_drive_pattern[current_level][1] = 1;//left wheel forwards
+        robot_drive_pattern[current_level][2] = 0;// right wheel backwards
         robot_drive_pattern[current_level][3] = time_to_drive_right;
-        robot_drive_pattern[current_level][4] = speed_robot;
+        robot_drive_pattern[current_level][4] = speed_robot;// left motor
+        robot_drive_pattern[current_level][5] = speed_robot;// right motor
       }
 
       break;
     }
   case 4:
-    {
+  {
+      //speed
+      if(global){
+        speed_robot = round(map(pot_value,begin_knob,end_knob,0,255));
+        robot_drive_pattern[current_level][0] = 4;
+      }
+      else{
+        robot_drive_pattern[current_level][0] = 4;
+        robot_drive_pattern[current_level][4] = round(map(pot_value,begin_knob,end_knob,0,255)); // speed left motor
+        robot_drive_pattern[current_level][5] = round(map(pot_value,begin_knob,end_knob,0,255)); // speed right motor
+      }
+      break;
+    }
+   
+  case 5:
+     {
       int delay_time = round(map(pot_value,begin_knob,end_knob,min_time,max_time));
-      robot_drive_pattern[current_level][0] = 4;
+      robot_drive_pattern[current_level][0] = 5;
       robot_drive_pattern[current_level][1] = delay_time;
 
       // delay
       break;
     }
-  case 5:
-    {
-      //speed
-      if(global){
-        speed_robot = round(map(pot_value,begin_knob,end_knob,0,255));
-        robot_drive_pattern[current_level][0] = 5;
-      }
-      else{
-        robot_drive_pattern[current_level][0] = 5;
-        robot_drive_pattern[current_level][3] = round(map(pot_value,begin_knob,end_knob,0,255));
-      }
-      break;
-    }
   case 6:
     {
       // loop A:
-
       if (pot_value == 0){
         // we have the first loop section
         for(int i  = current_level; i < rows; i++ ){

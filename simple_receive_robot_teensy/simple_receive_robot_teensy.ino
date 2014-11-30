@@ -43,7 +43,14 @@ void loop(){
           // get function block id save it temporarely to the next line of the 2D array so we can compare and combine it
           get_function_block_by_id(id_array [level+1][1], pot_array[level+1][1],level,false);
           // todo: combine functions
-          robot_drive_pattern[level][0];
+          
+          // in case both are driving forward: double the time driving forward
+          // in case both are driving backwards: double the time driving backwards
+          // in case one is forward, and the other is backward, its forward - backwards ( if it is positive drive forward, if it is negetive drive that backwards)
+          // in case one is forward/backwards and the otherone left/right, make a forwards turn, or backwards turn
+          
+
+                    
 
         }
       }
