@@ -12,7 +12,6 @@ void execution_blocks(){
     if(timeout_current_function == 0){
       // we have no timeout, so a repeat block
       // speed is changed globaly and saved for each drive block, so we don't need to implement it here
-      
       execution_row_counter++; // we only have to do this function once so continue to the next function after this
     }
     else if(in_execution == false && millis()- drive_timeout < timeout_current_function){

@@ -42,6 +42,8 @@ void loop(){
         if(id_array [level][1] =! 0){
           // get function block id save it temporarely to the next line of the 2D array so we can compare and combine it
           get_function_block_by_id(id_array [level+1][1], pot_array[level+1][1],level,false);
+          // todo: combine functions
+          robot_drive_pattern[level][0];
 
         }
       }
