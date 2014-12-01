@@ -1,6 +1,7 @@
 
 
 void handle_pot_message (){
+  
   int received_byte = receive_bytes();
   
 switch (received_byte) {
@@ -28,6 +29,7 @@ switch (received_byte) {
       pot_array [row_counter][collum_counter] = received_byte;
       break;
     }
+    
 
 }
 

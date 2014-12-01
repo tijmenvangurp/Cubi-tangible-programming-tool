@@ -1,4 +1,5 @@
 void handle_id_message(){
+  
   char c = Serial2.read();
   incomming_id = c;
   c = Serial2.read();
@@ -31,6 +32,7 @@ void handle_id_message(){
     id_array [row_counter][collum_counter] = incomming_id.toInt();
     break;
   }
+  
 }
 
 //void print_out(String toPrint){
