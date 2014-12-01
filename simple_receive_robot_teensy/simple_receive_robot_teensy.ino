@@ -45,9 +45,6 @@ void loop(){
           // todo: combine functions
           int combined_id_nummerator = robot_drive_pattern[level][0] + robot_drive_pattern[level+1][0];
 
-          if{}
-
-
           // in case one is forward/backwards and the otherone left/right, make a forwards turn, or backwards turn
           switch (combined_id_nummerator){
           case 4:
@@ -117,8 +114,6 @@ void loop(){
             }
 
           }
-
-
 
         }
       }
