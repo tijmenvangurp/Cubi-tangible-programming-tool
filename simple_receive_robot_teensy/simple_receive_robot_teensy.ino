@@ -72,8 +72,7 @@ void loop(){
   }
   else if(id_array[0][0] =! 0){
     // robot execution array is filled, important TODO clear out the array here
-    
-
+    construct_driving_pattern();
     // we are ready constructing the driving pattern so the robot can start
   }
 
