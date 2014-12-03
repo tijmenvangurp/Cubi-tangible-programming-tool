@@ -8,6 +8,7 @@ void construct_driving_pattern(){
       if(id_array [level][0] =! 0){
         // there is a block in this level ( if it is a speed block the function get function block id will handle the rest )
         get_function_block_by_id(id_array [level][0], pot_array[level][0]);
+
         local_speed_set = global_speed_robot; // if local speed is not the same as global speed local speed is set to global
 
         if(id_array [level][1] =! 0){
@@ -81,6 +82,7 @@ check if there other blocks than speed blocks, if so store in execute_driving ar
                     // combine current block with previous
                     robot_drive_pattern_counter--; // make sure the next block overwrites the current values by decreasing counter
                     combine_drive_function_blocks();
+
                   }
 
                 }

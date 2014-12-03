@@ -154,8 +154,10 @@ break;
     break;
 
     }
-  default:
+  default:{
+Serial.println("error in get function block by id");
     break;
+}
   }
   robot_drive_pattern_counter++;// next level will be saved on new line
 

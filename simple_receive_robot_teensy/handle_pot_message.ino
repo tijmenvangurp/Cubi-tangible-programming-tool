@@ -20,7 +20,7 @@ void handle_pot_message (){
     break;
   case 5000:
     Serial.println("End pot message");
-    waiting_for_pot_values = false; 
+    waiting_for_pot_values = false;
     break;
   default:
     Serial.println(received_byte);
@@ -37,4 +37,3 @@ int receive_bytes (){
   byte_to_read |= Serial2.read(); // add the most significant byte
   return byte_to_read;
 }
-

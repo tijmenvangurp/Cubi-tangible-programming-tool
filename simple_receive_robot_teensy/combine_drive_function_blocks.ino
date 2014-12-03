@@ -1,11 +1,11 @@
 void combine_drive_function_blocks(){
   /*
 just here for refference
-   const byte function_id_block = 0; 
-   const byte left_wheel_direction = 1; 
-   const byte right_wheel_direction = 2; 
-   const byte driving_time = 3; 
-   const byte left_wheel_speed = 4; 
+   const byte function_id_block = 0;
+   const byte left_wheel_direction = 1;
+   const byte right_wheel_direction = 2;
+   const byte driving_time = 3;
+   const byte left_wheel_speed = 4;
    const byte right_wheel_speed = 5;
    const byte forward = 1;
    const byte backwards = 0;
@@ -62,7 +62,7 @@ just here for refference
   case driving_left_rigt + driving_forwards_backwards:
     {
       // one is forward/backwards the otherone is turning
-      if(robot_drive_pattern[level][0] = 2){
+      if(robot_drive_pattern[level][0] = driving_forwards_backwards){
         // level block was forward/backwards
         // high time driving forward, and high time turning, is long corner allmost driving a circle --> time to execute is long, speed difference motors is not to big
         // low time to drive forward and high time turning, is short corner --> time to execute is short, speed difference motors is big
@@ -85,7 +85,7 @@ just here for refference
         int speed_setting = round(map(robot_drive_pattern[level][driving_time],min_time,max_time,local_speed_set,0));
         if(robot_drive_pattern[level][left_wheel_direction] == backwards){
           // turning left
-          robot_drive_pattern[level][function_id_block] = driving_forwards_backwards; 
+          robot_drive_pattern[level][function_id_block] = driving_forwards_backwards;
           robot_drive_pattern[level][driving_time] = robot_drive_pattern[level+1][driving_time];
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
           robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
@@ -93,7 +93,7 @@ just here for refference
         }
         else{
           // turning right
-          robot_drive_pattern[level][function_id_block] = driving_forwards_backwards; 
+          robot_drive_pattern[level][function_id_block] = driving_forwards_backwards;
           robot_drive_pattern[level][driving_time] = robot_drive_pattern[level+1][driving_time];
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
           robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
@@ -101,7 +101,7 @@ just here for refference
         }
 
       }
-      break;   
+      break;
     }
   case driving_left_rigt + driving_left_rigt:
     {
@@ -109,6 +109,8 @@ just here for refference
 
         if(robot_drive_pattern[level][left_wheel_direction] == robot_drive_pattern[level+1][left_wheel_direction]){
         // we can simply add up the time to turn this direction
+        robot_drive_pattern[level][driving_time] = (robot_drive_pattern[level][driving_time] + robot_drive_pattern[level + 1][driving_time] );
+
       }
       else{
         // we must figure out if the which time is bigger, and drive that time to that direction
@@ -116,7 +118,6 @@ just here for refference
         if(time_difference > 0 ){
           // direction stays that from the one of the level block
           robot_drive_pattern[level][driving_time] = time_difference;
-
         }
         else{
           // direction becomes that of the level+1 block
@@ -130,6 +131,10 @@ just here for refference
 
       break;
     }
+default:{
+Serial.println("Something went wrong in combining functions");
+
+}
 
   }
 
@@ -138,12 +143,3 @@ just here for refference
 
 
 }
-
-
-
-
-
-
-
-
-
