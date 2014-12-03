@@ -14,11 +14,11 @@ void handle_id_message(){
     row_counter = 0;
     break;
   case '.':
-    Serial.println("new id line");
+  //  Serial.println("new id line");
     row_counter++;
     break;
   case ',':
-    Serial.println("new id collum");
+  //  Serial.println("new id collum");
     collum_counter++;
     break;
   case '*':

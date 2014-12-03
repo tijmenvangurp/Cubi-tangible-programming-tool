@@ -11,11 +11,11 @@ void handle_pot_message (){
 
     break;
   case 4000:
-    Serial.println("new pot line");
+  //  Serial.println("new pot line");
     row_counter++;
     break;
   case 3000:
-    Serial.println("new pot collum");
+  //  Serial.println("new pot collum");
     collum_counter++;
     break;
   case 5000:
