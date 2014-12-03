@@ -1,5 +1,5 @@
 void execution_blocks(){
-// TODO built in loop functionality
+  // TODO built in loop functionality
   // let the robot drive
   if(!in_execution){
     drive_timeout = millis();
@@ -10,7 +10,7 @@ void execution_blocks(){
     // we have a function because the first item out of the array is not 0
     int timeout_current_function = robot_drive_pattern[execution_row_counter][driving_time];
     int current_robot_function = robot_drive_pattern[execution_row_counter][0];
-        if(current_robot_function == loop_a || current_robot_function = loop_b){
+    if(current_robot_function == loop_a || current_robot_function == loop_b){
       // if it is one of the repeat blocks handle it here
       // we need a boolean for in repeat
       // execution_row_counter is the start or end of the loop_b/a once it arrives at the end a counter should count how often the loop is done
@@ -18,38 +18,43 @@ void execution_blocks(){
 
       if(current_robot_function == loop_a ){
         if(repeat_x_times != 0 && loop_a_running == false){
-            // its the first time we are here, set loop_a_counter
+          // its the first time we are here, set loop_a_counter
           loop_a_counter = repeat_x_times;
           start_loop_a = execution_row_counter; // save current position for the start of the loop
           loop_a_running = true;
-        }else if(repeat_x_times == 0){
+        }
+        else if(repeat_x_times == 0){
           // this is the last block of the loop so start over if loopcounter is not yet 0
           if(loop_a_counter != 0){
             loop_a_counter --;
             // repeat_x_times was 0 so this means we are at the end of the block
             execution_row_counter = start_loop_a;
-            }else if(loop_b_counter != 0)){
+          }
+          else if(loop_b_counter != 0){
             // done with the loop
             // if this loop is inside another loop
             loop_a_running = false;
             // when b counter is not 0 this loop is inside the b loop, reset loop a so that it will start over when b loop is restarted
-                    }
-      }
+          }
+        }
 
-      }else{
+      }
+      else{
         // it was loop_b
         if(repeat_x_times != 0 && loop_b_running == false){
           // its the first time we are here, set loop_a_counter
-          loop_b_counter = repeat_b_x_times;
+          loop_b_counter = repeat_x_times;
           start_loop_a = execution_row_counter; // save current position for the start of the loop
           loop_a_running = true;
-        }else if(repeat_x_times == 0){
+        }
+        else if(repeat_x_times == 0){
           // this is the last block of the loop so start over if loopcounter is not yet 0
           if(loop_b_counter != 0){
             loop_b_counter --;
             // repeat_x_times was 0 so this means we are at the end of the block
             execution_row_counter = start_loop_a;
-          }else if(loop_a_counter != 0)){
+          }
+          else if(loop_a_counter != 0){
             // done with the loop
             // if this loop is inside another loop
             loop_b_running = false;
@@ -93,3 +98,4 @@ void execution_blocks(){
   }
 
 }
+

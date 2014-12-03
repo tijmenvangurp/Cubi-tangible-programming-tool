@@ -1,6 +1,4 @@
-
 void get_function_block_by_id(byte id, int pot_value){
-
   /*
   motor_assignment[0]= indication what variables there are
    2 = driving forward/backwards
@@ -14,7 +12,7 @@ void get_function_block_by_id(byte id, int pot_value){
    motor_assignment[2]= direction right motor (1 = forward, 0 = backwards)
    motor_assignment[3]= the ammount of time to drive this direction
    motor_assignment[4]= global speed value:  the speed for this block <-- we need this here because we change the speed setting globaly
-
+   
    */
   int speed_setting = 0;
   if(local_speed_set == global_speed_robot){
@@ -158,3 +156,4 @@ void get_function_block_by_id(byte id, int pot_value){
   robot_drive_pattern_counter++;// next level will be saved on new line
 
 }
+

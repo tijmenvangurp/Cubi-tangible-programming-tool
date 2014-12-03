@@ -123,7 +123,7 @@ just here for refference
           robot_drive_pattern[level][driving_time] = abs(time_difference);
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
           robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
-          
+
         }
 
       }
@@ -138,6 +138,7 @@ just here for refference
 
 
 }
+
 
 
 

@@ -1,11 +1,11 @@
 void handle_id_message(){
-  
+
   char c = Serial2.read();
   incomming_id = c;
   c = Serial2.read();
   incomming_id += c;
- // Serial.print("incomming Id = ");
-//  Serial.println(incomming_id);
+  // Serial.print("incomming Id = ");
+  //  Serial.println(incomming_id);
   switch (c) {
   case '+':
     Serial.println("new id message");
@@ -32,11 +32,12 @@ void handle_id_message(){
     id_array [row_counter][collum_counter] = incomming_id.toInt();
     break;
   }
-  
+
 }
 
 //void print_out(String toPrint){
 //  Serial.println(toPrint);
 //}
+
 
 
