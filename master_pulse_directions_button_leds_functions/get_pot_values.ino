@@ -1,10 +1,10 @@
 void get_pot_values(){
   /*
-  This function checkes if the current ID is odd or even. When its even it will collect the sensor data from that block.  
+  This function checkes if the blocks has a knob, because there are only 2 blockes witout a knob I check if these 2 ID's are not there
    */
-  if(received_id % 2 == 0 ){
-    // when there are no leftovers when recieved id is devided by 2 than it is even. all even id's will have a knob' all odd values wont have a knob
-    pot_array [row_counter][collum_counter] = sensor_data(received_id) +1;// plus 1 so the sensor data can never be a 0 this so i can use a if(pot_array [row_counter][collum_counter]== 0) to check if there are no potvalues
+  
+  if(received_id != 65 || received_id != 75 ){
+      pot_array [row_counter][collum_counter] = sensor_data(received_id) +1;// plus 1 so the sensor data can never be a 0 this so i can use a if(pot_array [row_counter][collum_counter]== 0) to check if there are no potvalues
   }
   else{
     pot_array [row_counter][collum_counter] = 0;
