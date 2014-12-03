@@ -1,8 +1,7 @@
 void get_pot_values(){
   /*
   This function checkes if the blocks has a knob, because there are only 2 blockes witout a knob I check if these 2 ID's are not there
-   */
-  
+   */  
   if(received_id != 65 || received_id != 75 ){
       pot_array [row_counter][collum_counter] = sensor_data(received_id) +1;// plus 1 so the sensor data can never be a 0 this so i can use a if(pot_array [row_counter][collum_counter]== 0) to check if there are no potvalues
   }

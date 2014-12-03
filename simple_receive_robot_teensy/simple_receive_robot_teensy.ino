@@ -34,6 +34,7 @@ byte loop_b_counter = 0;
 boolean loop_a_running = false;
 boolean loop_b_running = false;
 byte start_loop_a = 0;
+byte start_loop_b = 0;
 
 // constant names for driving pattern array
 const byte function_id_block = 0;
@@ -72,12 +73,12 @@ void loop(){
   }
   else if(id_array[0][0] =! 0){
     // robot execution array is filled, important TODO clear out the array here
-    construct_driving_pattern();
+    //construct_driving_pattern();
     // we are ready constructing the driving pattern so the robot can start
   }
 
   if(execute_driving){
-    execution_blocks();
+   // execution_blocks();
   }
 
 }
