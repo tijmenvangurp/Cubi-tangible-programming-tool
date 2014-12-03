@@ -1,6 +1,6 @@
 
 void get_function_block_by_id(byte id, int pot_value){
- 
+
   /*
   motor_assignment[0]= indication what variables there are
    2 = driving forward/backwards
@@ -14,14 +14,15 @@ void get_function_block_by_id(byte id, int pot_value){
    motor_assignment[2]= direction right motor (1 = forward, 0 = backwards)
    motor_assignment[3]= the ammount of time to drive this direction
    motor_assignment[4]= global speed value:  the speed for this block <-- we need this here because we change the speed setting globaly
-   
+
    */
-   int speed_setting = 0;
+  int speed_setting = 0;
   if(local_speed_set == global_speed_robot){
     speed_setting = global_speed_robot;
-  }else{
+  }
+  else{
     speed_setting = local_speed_set;
-  }  
+  }
   int current_level  = robot_drive_pattern_counter;
 
   robot_drive_pattern[current_level][0] = round(floor((id/10)));
@@ -55,7 +56,7 @@ void get_function_block_by_id(byte id, int pot_value){
       break;
     }
   case driving_left_rigt:
-    {      
+    {
       if(pot_value < middle_knob){
         // drive left
         int time_to_drive_left = round(map(pot_value,begin_knob,middle_knob,max_time,min_time));
@@ -80,11 +81,13 @@ void get_function_block_by_id(byte id, int pot_value){
 
       break;
     }
-   case delay_function:
+  case delay_function:
     {
       int delay_time = round(map(pot_value,begin_knob,end_knob,min_time,max_time));
       robot_drive_pattern[current_level][function_id_block] = delay_function;
-      robot_drive_pattern[current_level][1] = delay_time;
+      robot_drive_pattern[current_level][3] = delay_time;
+      robot_drive_pattern[current_level][4] = 0;// left motor set motor speed to 0 so the motor will actualy do nothing
+      robot_drive_pattern[current_level][5] = 0;// right motor
 
       // delay
       break;
@@ -95,34 +98,45 @@ void get_function_block_by_id(byte id, int pot_value){
       if (pot_value == 0){
         // we have the first loop section
         for(int i  = current_level; i < rows; i++ ){
-          int current_id_section = round(floor((id_array [i][0]/10)));
-          if(current_id_section == loop_a){
-            pot_value = pot_array [i][0];
-            pot_array[i][0] = 0; 
+          if(id_array [i][0] != 0){
+            int current_id_section = round(floor((id_array [i][0]/10)));
+            if(current_id_section == loop_a){
+              robot_drive_pattern[current_level][0] = loop_a;
+              pot_value = round(map(pot_array [i][0],begin_knob,end_knob,1,9)) ;
+              robot_drive_pattern[current_level][1] = pot_value;
+              pot_array[i][0] = 0;
+              break;
+            }
           }
+          else{
+            robot_drive_pattern[current_level][0] = loop_a;
+            robot_drive_pattern[current_level][1] = 0;// 0 on this place means end of loop
+            // begin of loop a was already in the code so save it as a 0
+            break;
+          }
+
         }
         // this for loop searches down for the next value, if there is nothing to find its the closing part of the repeat
       }
-      if (pot_value != 0){
+      else if (pot_value != 0){
         int repeat_x_times = round(map(pot_value,begin_knob,end_knob,1,9));
         robot_drive_pattern[current_level][0] = loop_a;
         robot_drive_pattern[current_level][1] = repeat_x_times;
       }
-      else{
-        robot_drive_pattern[current_level][0] = loop_a;
-        robot_drive_pattern[current_level][1] = 0;// 0 on this place means end of loop
-      }
+
       break;
     }
   case loop_b:
-    { // loop A:
+    {
+      // TODO apply improvements loop a
+      // loop B:
       if (pot_value == 0){
         // we have the first loop section
         for(int i  = current_level; i < rows; i++ ){
           int current_id_section = round(floor((id_array [i][0]/10)));
           if(current_id_section == loop_b){
             pot_value = pot_array [i][0];
-            pot_array[i][0] = 0; 
+            pot_array[i][0] = 0;
           }
         }
         // this for loop searches down for the next value, if there is nothing to find its the closing part of the repeat
@@ -144,8 +158,3 @@ void get_function_block_by_id(byte id, int pot_value){
   robot_drive_pattern_counter++;// next level will be saved on new line
 
 }
-
-
-
-
-

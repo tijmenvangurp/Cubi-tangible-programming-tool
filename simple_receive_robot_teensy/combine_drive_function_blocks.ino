@@ -14,7 +14,7 @@ just here for refference
   int combined_id_nummerator = robot_drive_pattern[level][0] + robot_drive_pattern[level+1][0];
   // in case one is forward/backwards and the otherone left/right, make a forwards turn, or backwards turn
   switch (combined_id_nummerator){
-  case driving_forwards_backwards*2:
+  case driving_forwards_backwards + driving_forwards_backwards:
     {
       if(robot_drive_pattern[level][left_wheel_direction] == robot_drive_pattern[level][left_wheel_direction]){
         // in case both are driving forward or both are driving backwards: add the time driving forward/backwards
@@ -30,13 +30,13 @@ just here for refference
             // result is driving forward
             robot_drive_pattern[level][left_wheel_direction] = forwards;
             robot_drive_pattern[level][right_wheel_direction] = forwards;
-            robot_drive_pattern[level][3] = result_combined_time_forward_backward;
+            robot_drive_pattern[level][driving_time] = result_combined_time_forward_backward;
           }
           else{
             // result is driving backwards
             robot_drive_pattern[level][left_wheel_direction] = backwards;
             robot_drive_pattern[level][right_wheel_direction] = backwards;
-            robot_drive_pattern[level][3] = (result_combined_time_forward_backward *-1);
+            robot_drive_pattern[level][driving_time] = abs(result_combined_time_forward_backward);
           }
         }
         else{
@@ -52,13 +52,14 @@ just here for refference
             // result is driving backwards
             robot_drive_pattern[level][left_wheel_direction] = backwards;
             robot_drive_pattern[level][right_wheel_direction] = backwards;
-            robot_drive_pattern[level][driving_time] = (result_combined_time_forward_backward *-1);
+            robot_drive_pattern[level][driving_time] = abs(result_combined_time_forward_backward);
           }
         }
       }
+      break;
     }
 
-  case 5:
+  case driving_left_rigt + driving_forwards_backwards:
     {
       // one is forward/backwards the otherone is turning
       if(robot_drive_pattern[level][0] = 2){
@@ -97,17 +98,50 @@ just here for refference
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
           robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
           robot_drive_pattern[level][right_wheel_speed] = speed_setting;
+        }
 
+      }
+      break;   
+    }
+  case driving_left_rigt + driving_left_rigt:
+    {
+      // check if both are left/right
+
+        if(robot_drive_pattern[level][left_wheel_direction] == robot_drive_pattern[level+1][left_wheel_direction]){
+        // we can simply add up the time to turn this direction
+      }
+      else{
+        // we must figure out if the which time is bigger, and drive that time to that direction
+        int time_difference = robot_drive_pattern[level][driving_time] - robot_drive_pattern[level+1][driving_time];
+        if(time_difference > 0 ){
+          // direction stays that from the one of the level block
+          robot_drive_pattern[level][driving_time] = time_difference;
+
+        }
+        else{
+          // direction becomes that of the level+1 block
+          robot_drive_pattern[level][driving_time] = abs(time_difference);
+          robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
+          robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
+          
         }
 
       }
 
+      break;
     }
 
   }
 
+  robot_drive_pattern[level+1][function_id_block] = 0;
+  robot_drive_pattern[level+1][driving_time] = 0;// if driving time = 0 it is a loop block,
+
 
 }
+
+
+
+
 
 
 
