@@ -98,7 +98,7 @@ void loop(){
     }
   }
   check_buttons();
-  if(millis() - i2c_communications_delay < 500){// once we have finished all the important jobs ge give 500 miliseconds the time wherein the line can be broken, 
+  if(millis() - i2c_communications_delay > 500){// once we have finished all the important jobs ge give 500 miliseconds the time wherein the line can be broken, 
   //the larger the number the lower the chance i2c gets disturbed by a disconnection but the slower the discovery protocol works
   init_i2c();
   save_id();

@@ -3,9 +3,13 @@ const byte master_address = 10;
 const byte led_pin = 13;
 
 // BLOCK ID
-const byte block_id = 16;
+const byte block_id = 60;
 
 boolean message_recieved = false;
+
+boolean blink_led = false;
+int led_state = LOW;
+unsigned long time_stamp_led_change = 0;        // will store last time LED was updated
 
 char message[10];
 
@@ -22,8 +26,8 @@ int handshake_sending_direction;
 
 unsigned long duration_pulse_in;
 unsigned long duration_between_pulses = 0;
-
 unsigned long switch_pulse_direction_timout = 0;
+
 int pulse_counter = 0;
 
 const byte sensor_pin = A0;
@@ -64,42 +68,67 @@ void loop(){
     message_recieved = false;
     //    Serial.print(message[0]);
     //    Serial.println(message[1]);
-    //--------------------------------- Check if message was for changing the INPUT direction
-    if(message[0]== 'I'){
 
-      switch (message[1]){
-      case 'U':
-        handshake_listening_direction = pulse_line_above;
-        // Serial.println("message recieved listen to block up");
-        break;
-      case 'R':
-        handshake_listening_direction = pulse_line_right;
-        break;
-      case 'L':
-        handshake_listening_direction = pulse_line_left;
+    char identifyer_character = message[0];
+    switch (identifyer_character){
+    case  'I':
+      //--------------------------------- Check if message was for changing the INPUT direction
+      {
+        switch (message[1]){
+        case 'U':
+          handshake_listening_direction = pulse_line_above;
+          // Serial.println("message recieved listen to block up");
+          break;
+        case 'R':
+          handshake_listening_direction = pulse_line_right;
+          break;
+        case 'L':
+          handshake_listening_direction = pulse_line_left;
+          break;
+        }
+        send_pulses = false;
+        listen_for_pulses = true;
+        digitalWrite(led_pin, LOW);
         break;
       }
-      send_pulses = false;
-      listen_for_pulses = true;
-      digitalWrite(led_pin, LOW);
+      case 'B'{
+        //--------------------------------- There was an error: let this block blink
+        blink_led = true;
+        break;
+      }
+
+    default:
+      //--------------------------------- Check if message was for changing the OUTPUT direction
+      {
+        switch (message[0]){
+        case 'R':
+          handshake_sending_direction = pulse_line_right;
+          break;
+        case 'D':
+          handshake_sending_direction = pulse_line_down;
+          break;
+        case 'L':
+          handshake_sending_direction = pulse_line_left;
+          break;
+        }
+        send_pulses = true;
+        listen_for_pulses = false;
+        digitalWrite(led_pin, HIGH);
+        break;
+      }
     }
-    //--------------------------------- Check if message was for changing the OUTPUT direction
-    else{
-      switch (message[0]){
-      case 'R':
-        handshake_sending_direction = pulse_line_right;
-        break;
-      case 'D':
-        handshake_sending_direction = pulse_line_down;
-        break;
-      case 'L':
-        handshake_sending_direction = pulse_line_left;
-        break;
-
+  }
+  if(blink_led){
+    unsigned long current_millis = millis();
+    if(current_millis - time_stamp_led_change > 1000){
+      time_stamp_led_change = current_millis;
+      if(led_state == LOW){
+        rgb_on();
+        led_state = HIGH;
       }
-      send_pulses = true;
-      listen_for_pulses = false;
-      digitalWrite(led_pin, HIGH);
+      else{
+        rgb_off();
+        led_state = LOW;     }
     }
   }
 
@@ -135,7 +164,7 @@ void listen_for_pulses_from_direction()
 
   if(pulse_counter > 3 || pulse_counter < 0){
     //Serial.print(pulse_counter);s
-  //  Serial.println(" :pulse counter reset");
+    //  Serial.println(" :pulse counter reset");
     pulse_counter = 0;
   }
   if(pulse_counter == 0){
@@ -194,20 +223,6 @@ void rgb_off(){
   analogWrite(g,0);
   analogWrite(b,0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

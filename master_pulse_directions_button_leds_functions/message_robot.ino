@@ -153,6 +153,8 @@ void construct_message(){
     Serial.print(slave_summary);
     waiting_to_send_pot_values = true;
     robot_message = slave_summary;
+  }else if(errors){
+  Serial.println("there where errors");
   }
 
   // Serial.print(slave_summary);
