@@ -120,15 +120,16 @@ void loop(){
   }
   if(blink_led){
     unsigned long current_millis = millis();
-    if(current_millis - time_stamp_led_change > 1000){
+    if(current_millis - time_stamp_led_change > 250){
       time_stamp_led_change = current_millis;
       if(led_state == LOW){
-        rgb_on();
+        analogWrite(r,150);
         led_state = HIGH;
       }
       else{
         rgb_off();
-        led_state = LOW;     }
+        led_state = LOW;     
+      }
     }
   }
 
@@ -191,7 +192,9 @@ void listen_for_pulses_from_direction()
     //   Serial.println(micros()- duration_between_pulses);
     // And send my ID to the master
     switch_pulse_direction_timout = millis();
-    rgb_on();
+    if(!blink_led){
+      rgb_on();
+    }
     Wire.beginTransmission(master_address);
     Wire.write(block_id);              // sends its adress (ID)
     Wire.endTransmission();            // stop transmitting
@@ -223,6 +226,7 @@ void rgb_off(){
   analogWrite(g,0);
   analogWrite(b,0);
 }
+
 
 
 
