@@ -20,6 +20,7 @@ void handle_pot_message (){
     break;
   case 5000:
     Serial.println("End pot message");
+   // Serial2.print('P');
     waiting_for_pot_values = false;
     break;
   default:
