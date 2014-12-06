@@ -19,6 +19,7 @@ boolean first_id_received = false;
 boolean message_recieved = false;
 boolean line_ready = false;
 boolean waiting_to_send_pot_values = false;
+boolean errors = false;
 
 int collum_counter = 0;
 int row_counter = 0;
@@ -40,6 +41,7 @@ unsigned long waiting_for_id_timeout = 0;
 unsigned long no_pulse_response_timeout = 0;
 unsigned long i2c_communications_delay = 0; 
 boolean waiting_for_id = false ;
+boolean send_once = true;
 
 
 //button to start
@@ -105,9 +107,9 @@ void loop(){
     id_to_light_up += robot_message;
     int active_block = id_to_light_up.toInt();
     error_message(active_block,'G');
-    Serial.print("make block nr ");
-    Serial.print(active_block);
-    Serial.println(" green");
+    //Serial.print("make block nr ");
+   // Serial.print(active_block);
+    //Serial.println(" green");
   }
   check_buttons();
   if(millis() - i2c_communications_delay > 500){// once we have finished all the important jobs ge give 500 miliseconds the time wherein the line can be broken, 
