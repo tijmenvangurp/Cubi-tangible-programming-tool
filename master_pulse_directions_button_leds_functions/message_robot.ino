@@ -3,8 +3,8 @@ void construct_message(){
   This function creates a string package of ID's to send to the robot, and a package of bytes of the potvalues.
    It also checkes if all the blockes are still in the same position, if they are in a new position the message should be send, otherwise not. 
    */
-  boolean errors = false;
 
+  boolean errors = false;
   memset(potmeter_values_to_send,0,sizeof(potmeter_values_to_send)); // clear out prepared buffer array
   potmeter_array_counter = 0;
   prepare_message(2000);// 2000 is start message robot knows this 1 to 1024 are reserved for pot values
@@ -19,16 +19,18 @@ void construct_message(){
   int check_position_loop_blocks [4][2];
   memset(check_position_loop_blocks, 0, sizeof(check_position_loop_blocks[0][0]) * 4 * 2); // clear out pot_array, fill it with zeros
   int position_loop_blocks_counter = 0;
-  if(id_array[0][0] =!0){
+
+  if(id_array[0][0] != 0){
     // we have at least one block so start message
     slave_summary = "++";
   }
 
   for (int level = 0; level < rows; level++) {
-    if(id_array[level][0] =!0){
+    if(id_array[level][0] != 0){
+      //freeRam ();
+
       // at this point check the message if all the blocks are in the right order
       int id_catogary_block = round(floor((id_array[level][0]/10)));
-
       // check if loop a or loop b is in tha house and save in seperate array
       if (id_catogary_block == 6 || id_catogary_block == 7){
         check_position_loop_blocks [position_loop_blocks_counter][0] = id_array[level][0];
@@ -82,8 +84,9 @@ void construct_message(){
   // if they are not both available check if a or b is in tha house
   // than check if the loop is closed
   // handle errors and don't send message to robot
-  if(position_loop_blocks_counter =!0){
-
+  if(position_loop_blocks_counter != 0){
+    // Serial.print("error counter = ");
+    // Serial.println(position_loop_blocks_counter);
     switch (position_loop_blocks_counter){
     case 1:
       {
@@ -95,12 +98,14 @@ void construct_message(){
     case 2:
       {
         // 2 blocks check if both from the same loop
-        if (check_position_loop_blocks[0][1] =! check_position_loop_blocks[1][1]){
+        if (check_position_loop_blocks[0][1] != check_position_loop_blocks[1][1]){
           // 2 loop blocks from different kind
           errors = true;
           error_message(check_position_loop_blocks[0][0],'B');
           error_message(check_position_loop_blocks[1][0],'B');
+          Serial.println("there where 2 loop blocks but they are not the same kind");
         }
+        break;
       }
     case 3:
       {
@@ -136,11 +141,17 @@ void construct_message(){
       }
     case 4:
       {
-        // only wrong possibility is abab once there are 2 after eachother the same its ok
-        if(check_position_loop_blocks[0][1] != check_position_loop_blocks[1][1] && check_position_loop_blocks[2][1] != check_position_loop_blocks[3][1]){
+        // abba is ok, and baab is ok, so test if the first and last are the same and the 2 middle ones are the same
+        // aabb is also ok os either the first and last should be the same or the the 2 first should be the same
+        // check for abab
+        if(check_position_loop_blocks[0][1] == check_position_loop_blocks[3][1] || check_position_loop_blocks[0][1] == check_position_loop_blocks[1][1]){
+          // everything is ok
+        }
+        else{
           error_message(check_position_loop_blocks[1][0],'B');
           error_message(check_position_loop_blocks[3][0],'B');
         }
+        break;
       }
     }
   }
@@ -150,11 +161,14 @@ void construct_message(){
     Wire.write('S');
     Wire.endTransmission();
     delayMicroseconds(100);
-    Serial.print(slave_summary);
+    Serial.println(slave_summary);
     waiting_to_send_pot_values = true;
     robot_message = slave_summary;
-  }else if(errors){
-  Serial.println("there where errors");
+  }
+  else if(errors){
+    Serial.println("there where errors");
+    Serial.println(slave_summary);
+    robot_message = slave_summary;
   }
 
   // Serial.print(slave_summary);
@@ -178,6 +192,10 @@ void value_to_add(int val){
   potmeter_values_to_send [potmeter_array_counter] = val;
   potmeter_array_counter++;
 }
+
+
+
+
 
 
 
