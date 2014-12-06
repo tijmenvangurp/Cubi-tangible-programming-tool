@@ -71,12 +71,12 @@ void setup()
   // initialize serial connection xbee
   Serial.begin(9600);
 
- // Serial.println("Master started");// can be removed
+  // Serial.println("Master started");// can be removed
 }
 
 void loop(){
 
-  if(waiting_to_send_pot_values && Serial.available() > 0){
+  if(waiting_to_send_pot_values && Serial.available() > 0 ){
     char robot_message = Serial.read();
     // robot sends a go once it has received all id values so we can send potvalues
     if(robot_message == 'G' ){
@@ -85,27 +85,39 @@ void loop(){
         Serial.write(potmeter_values_to_send[i]);
         /*
         //remember to change i++ to i+=2
-        int test_print = potmeter_values_to_send[i] << 8;
+         int test_print = potmeter_values_to_send[i] << 8;
          test_print |= potmeter_values_to_send[i+1];
          Serial.println(test_print);
          */
         // semd all the values from potmeter
-          if(potmeter_values_to_send[i] == lowByte(5000)){
+        if(potmeter_values_to_send[i] == lowByte(5000)){
           break;
           // if we have the last byte we can stop sending, the array of bytes is filled with 0 after 5000
         }
       }
     }
   }
+  else if(Serial.available() > 1){
+    String id_to_light_up = "";
+    char robot_message = Serial.read();
+    id_to_light_up += robot_message;
+    robot_message = Serial.read();
+    id_to_light_up += robot_message;
+    int active_block = id_to_light_up.toInt();
+    error_message(active_block,'G');
+    Serial.print("make block nr ");
+    Serial.print(active_block);
+    Serial.println(" green");
+  }
   check_buttons();
   if(millis() - i2c_communications_delay > 500){// once we have finished all the important jobs ge give 500 miliseconds the time wherein the line can be broken, 
-  //the larger the number the lower the chance i2c gets disturbed by a disconnection but the slower the discovery protocol works
-  init_i2c();
-  save_id();
-  request_timout_change_search_direction();
-  send_request_to_id_or_reset();
+    //the larger the number the lower the chance i2c gets disturbed by a disconnection but the slower the discovery protocol works
+    init_i2c();
+    save_id();
+    request_timout_change_search_direction();
+    send_request_to_id_or_reset();
   }
-  
+
 }
 
 void send_pulses_down() {
@@ -118,6 +130,7 @@ void send_pulses_down() {
   delayMicroseconds(30);
   digitalWrite(pulse_line_down, LOW);
 }
+
 
 
 
