@@ -34,11 +34,12 @@ void receiveEvent(int howMany){
   This function handles incomming bytes from the I2C, it is autmaticly called upon by the wire I2C library
    */
   message_recieved = true;
-  received_id = Wire.read();    // receive byte as an integer
-
-  for(int i = 0; i < howMany ; i++){
+  received_id = Wire.read();  // receive byte as an integer
+    for(int i = 0; i < howMany ; i++){
     Wire.read ();// flush buffer probably not nessesary, but if there was more than one byte to be send we make shure that these bytes are removed
   }
+
+
 }
 
 void requestNeighbour_id_side (int block_id, char side){
@@ -51,13 +52,13 @@ void requestNeighbour_id_side (int block_id, char side){
   Wire.write(side);
   error = Wire.endTransmission(true);
   /*
-  if(error =! 1){
+  if(error != 1){
    Serial.print("error in wire transmissionrequest neighbour error = ");
    Serial.println(error);
    }
    */
   waiting_for_id = true;
-  // Serial.print("time between 2 requests = ");
+   //Serial.print("time between 2 requests = ");
   // Serial.println(micros() - waiting_for_id_timeout);
   waiting_for_id_timeout = micros();
   // after the request is send we give some time for the pulses to land, if we dont receive an id in time we search to the next direction
@@ -76,12 +77,12 @@ void set_handshake_listening_direction_slaves(char side){
   Wire.write(message);
   error = Wire.endTransmission();
   /*
-  if(error =! 1){
+  if(error  1){
    Serial.print("error in wire transmission set handshake error = ");
    Serial.println(error);
    }
    */
-  delayMicroseconds(100);// just for safety, give all blocks time to recover before I send a new message on the line
+  delayMicroseconds(1000);// just for safety, give all blocks time to recover before I send a new message on the line
   // Serial.println(F("Finished setting listening direction "));
 }
 
