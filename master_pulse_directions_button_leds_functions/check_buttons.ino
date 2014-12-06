@@ -6,8 +6,11 @@ void check_buttons(){
   */
   button_state_start = digitalRead(button_start);
   if(button_state_start != lastButtonState_start && button_state_start == HIGH){
-    //Serial.println("Start button pressed");
-    Serial.println(slave_summary);
+   // Serial.println("Start button pressed");
+    if(errors == false && waiting_to_send_pot_values == false){
+      waiting_to_send_pot_values = true;
+    Serial.print(slave_summary);
+    }
   }
   lastButtonState_start = button_state_start;
 
