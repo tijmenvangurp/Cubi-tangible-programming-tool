@@ -23,7 +23,7 @@ it might be that we are still searching for blocks, in the send to request direc
     memset(pot_array, 0, sizeof(pot_array[0][0]) * rows * collums); // clear out pot_array, fill it with zeros
     set_handshake_listening_direction_slaves('U');
      
-     
+   
     i2c_communications_delay = millis();
     //delay(400);// 2 times per second we check the whole structure this way the chance is small that we remove blocks in the middle of the discovery sequence.
     // todo: remove this delay and use the time to check if the blocks are in the right order
