@@ -3,7 +3,7 @@ const byte master_address = 10;
 const byte led_pin = 13;
 
 // BLOCK ID
-const byte block_id = 28;
+const byte block_id = 45;
 
 boolean message_recieved = false;
 

@@ -60,9 +60,17 @@ String incomming_id = "";
 void setup(){
   Serial.begin(9600);
   Serial2.begin(9600);
+  Serial.println("Robot started");
 }
 void loop(){
-
+  if(Serial.available()> 0){
+    char k = Serial.read();
+    Serial.println(k);
+    if(k == 'R'){
+      waiting_for_pot_values = false;
+    }
+  }
+  
   if (Serial2.available() >= 2){
     if(waiting_for_pot_values){
       handle_pot_message();
@@ -78,7 +86,9 @@ void loop(){
   }
 
   if(execute_driving){
-   // execution_blocks();
+    // execution_blocks();
   }
 
 }
+
+
