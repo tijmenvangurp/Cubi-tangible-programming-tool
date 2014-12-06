@@ -27,6 +27,8 @@ int handshake_sending_direction;
 unsigned long duration_pulse_in;
 unsigned long duration_between_pulses = 0;
 unsigned long switch_pulse_direction_timout = 0;
+unsigned long confirm_right_connection_timout = 0;
+boolean right_connection = false;
 
 int pulse_counter = 0;
 
@@ -64,72 +66,47 @@ void loop(){
     rgb_off();
     digitalWrite(led_pin, LOW);
   }
+  
   if(message_recieved){
     message_recieved = false;
-    //    Serial.print(message[0]);
-    //    Serial.println(message[1]);
+    //Serial.println(message[0]);
+    //  Serial.println(message[1]);
+    //--------------------------------- Check if message was for changing the INPUT direction
+    if(message[0]== 'I'){
 
-    char identifyer_character = message[0];
-    switch (identifyer_character){
-    case  'I':
-      //--------------------------------- Check if message was for changing the INPUT direction
-      {
-        switch (message[1]){
-        case 'U':
-          handshake_listening_direction = pulse_line_above;
-          // Serial.println("message recieved listen to block up");
-          break;
-        case 'R':
-          handshake_listening_direction = pulse_line_right;
-          break;
-        case 'L':
-          handshake_listening_direction = pulse_line_left;
-          break;
-        }
-        send_pulses = false;
-        listen_for_pulses = true;
-        digitalWrite(led_pin, LOW);
+      switch (message[1]){
+      case 'U':
+        handshake_listening_direction = pulse_line_above;
+        // Serial.println("message recieved listen to block up");
+        break;
+      case 'R':
+        handshake_listening_direction = pulse_line_right;
+        break;
+      case 'L':
+        handshake_listening_direction = pulse_line_left;
         break;
       }
-      case 'B'{
-        //--------------------------------- There was an error: let this block blink
-        blink_led = true;
-        break;
-      }
-
-    default:
-      //--------------------------------- Check if message was for changing the OUTPUT direction
-      {
-        switch (message[0]){
-        case 'R':
-          handshake_sending_direction = pulse_line_right;
-          break;
-        case 'D':
-          handshake_sending_direction = pulse_line_down;
-          break;
-        case 'L':
-          handshake_sending_direction = pulse_line_left;
-          break;
-        }
-        send_pulses = true;
-        listen_for_pulses = false;
-        digitalWrite(led_pin, HIGH);
-        break;
-      }
+      send_pulses = false;
+      listen_for_pulses = true;
+      digitalWrite(led_pin, LOW);
     }
-  }
-  if(blink_led){
-    unsigned long current_millis = millis();
-    if(current_millis - time_stamp_led_change > 250){
-      time_stamp_led_change = current_millis;
-      if(led_state == LOW){
-        analogWrite(r,150);
-        led_state = HIGH;
+    //--------------------------------- Check if message was for changing the OUTPUT direction
+    else{
+      switch (message[0]){
+      case 'R':
+        handshake_sending_direction = pulse_line_right;
+        break;
+      case 'D':
+        handshake_sending_direction = pulse_line_down;
+        break;
+      case 'L':
+        handshake_sending_direction = pulse_line_left;
+        break;
+
       }
-      else{
-        rgb_off();
-        led_state = LOW;     
-      }
+      send_pulses = true;
+      listen_for_pulses = false;
+      digitalWrite(led_pin, HIGH);
     }
   }
 
@@ -164,7 +141,7 @@ void listen_for_pulses_from_direction()
 {
 
   if(pulse_counter > 3 || pulse_counter < 0){
-    //Serial.print(pulse_counter);s
+    //Serial.print(pulse_counter);
     //  Serial.println(" :pulse counter reset");
     pulse_counter = 0;
   }
@@ -172,32 +149,61 @@ void listen_for_pulses_from_direction()
     duration_between_pulses = micros();
   }
 
-  if((micros()- duration_between_pulses)>2000){
+  if((micros()- duration_between_pulses)> 2000){
     pulse_counter = 0;
     //pulses by accidentally wire touching will be removed because we expect 3 pulses in time period of 1500 microseconds
   }
   pinMode(handshake_listening_direction, INPUT);
-
   duration_pulse_in = pulseIn(handshake_listening_direction, HIGH, 100); // listen for a pulse for max 100 microseconds
 
   if (pulse_counter < 3 && duration_pulse_in > 30 && duration_pulse_in < 40){
     //    duration_between_pulses = micros();
     // Serial.println(duration_pulse_in);
     pulse_counter++;
-    // Serial.println(pulse_counter);
+    
   }
   else if(pulse_counter >= 3 && (micros()- duration_between_pulses) < 2000){
+    // Serial.println(pulse_counter);
     pulse_counter = 0;
     //  Serial.println("duration for 3 pulses ");
     //   Serial.println(micros()- duration_between_pulses);
     // And send my ID to the master
-    switch_pulse_direction_timout = millis();
+    //switch_pulse_direction_timout = millis();
+
+    /*
     if(!blink_led){
-      rgb_on();
-    }
+     // when we are just connected make it blink green a few times
+     if(!right_connection){
+     right_connection = true; 
+     confirm_right_connection_timout = millis(); 
+     }
+     if(millis()- confirm_right_connection_timout > 5000){
+     rgb_on();
+     }
+     else{
+     unsigned long current_millis = millis();
+     if(current_millis - time_stamp_led_change > 250){
+     time_stamp_led_change = current_millis;
+     if(led_state == LOW){
+     analogWrite(g,225);
+     led_state = HIGH;
+     }
+     else{
+     rgb_off();
+     led_state = LOW;
+     }
+     }
+     }
+     }
+     */
+    Serial.print(message[0]);
+    Serial.println(message[1]);
+    Serial.println(handshake_listening_direction);
+    //delay(100);
     Wire.beginTransmission(master_address);
     Wire.write(block_id);              // sends its adress (ID)
     Wire.endTransmission();            // stop transmitting
+    
     listen_for_pulses = false; // stop listening for pulses, my neigbour could still be sending wait for instructions from the master.
   }
 }
@@ -205,7 +211,6 @@ void listen_for_pulses_from_direction()
 
 void send_pulses_to_direction() {
   // Serial.println(F("Sending pulses down"));
-
   pinMode(handshake_sending_direction, OUTPUT);
   digitalWrite(handshake_sending_direction, LOW);
   delayMicroseconds(30);
@@ -226,6 +231,13 @@ void rgb_off(){
   analogWrite(g,0);
   analogWrite(b,0);
 }
+
+
+
+
+
+
+
 
 
 
