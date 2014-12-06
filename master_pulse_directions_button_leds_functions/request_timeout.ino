@@ -4,7 +4,7 @@ void request_timout_change_search_direction(){
    when the search direction was for a new line, and there are no more blocks down than construct the message for the robot
    */
 
-  static int time_to_wait = 8000;// if there is no repons in 5000 microseconds search in next direction
+  static int time_to_wait = 9000;// if there is no repons in 5000 microseconds search in next direction
   if (waiting_for_id == true && (micros() - waiting_for_id_timeout) > time_to_wait) {
     waiting_for_id = false;
     switch(slave_search_direction) {
