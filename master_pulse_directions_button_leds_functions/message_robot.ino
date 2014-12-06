@@ -4,7 +4,7 @@ void construct_message(){
    It also checkes if all the blockes are still in the same position, if they are in a new position the message should be send, otherwise not. 
    */
 
-  boolean errors = false;
+  errors = false;
   memset(potmeter_values_to_send,0,sizeof(potmeter_values_to_send)); // clear out prepared buffer array
   potmeter_array_counter = 0;
   prepare_message(2000);// 2000 is start message robot knows this 1 to 1024 are reserved for pot values
@@ -103,7 +103,7 @@ void construct_message(){
           errors = true;
           error_message(check_position_loop_blocks[0][0],'B');
           error_message(check_position_loop_blocks[1][0],'B');
-          Serial.println("there where 2 loop blocks but they are not the same kind");
+         // Serial.println("there where 2 loop blocks but they are not the same kind");
         }
         break;
       }
@@ -157,17 +157,17 @@ void construct_message(){
   }
 
   if (slave_summary != robot_message && errors == false){
-    Wire.beginTransmission(0x0); // broadcast to all ID's
-    Wire.write('S');
-    Wire.endTransmission();
-    delayMicroseconds(100);
-    Serial.println(slave_summary);
-    waiting_to_send_pot_values = true;
+//    Wire.beginTransmission(0x0); // broadcast to all ID's
+//    Wire.write('S');
+//    Wire.endTransmission();
+//    delayMicroseconds(100);
+    //Serial.println(slave_summary);
+    
     robot_message = slave_summary;
   }
   else if(errors){
-    Serial.println("there where errors");
-    Serial.println(slave_summary);
+   // Serial.println("there where errors");
+  //  Serial.println(slave_summary);
     robot_message = slave_summary;
   }
 
