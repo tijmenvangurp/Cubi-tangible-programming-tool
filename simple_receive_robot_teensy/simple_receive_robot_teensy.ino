@@ -51,7 +51,7 @@ const byte backwards = 0;
 const int max_time = 5000;
 const int min_time = 100;
 const int middle_knob = 513;
-const int end_knob = 1025;
+const int end_knob = 1024;
 const int begin_knob = 1;
 
 boolean start_constructing_patern = false;

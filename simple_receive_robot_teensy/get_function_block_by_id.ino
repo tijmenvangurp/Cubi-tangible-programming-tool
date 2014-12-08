@@ -116,7 +116,7 @@ void get_function_block_by_id(int id, int pot_value){
 
             if(current_id_section == loop_a){
               // we where not the last block in the loop so reverse the potvalues
-              pot_value = round(map(pot_array [i][0],begin_knob,end_knob,1,9)) ;
+              pot_value = round(map(pot_array [i][0],-80,end_knob,1,9)) ;
               // store id value in driving pattern for light up both loop blocks
               robot_drive_pattern[current_level][1] = pot_value;
               robot_drive_pattern[current_level][2] = current_id;
@@ -135,7 +135,7 @@ void get_function_block_by_id(int id, int pot_value){
         // this for loop searches down for the next value, if there is nothing to find its the closing part of the repeat
       }
       else if (pot_value != 0){
-        int repeat_x_times = round(map(pot_value,begin_knob,end_knob,1,9));
+        int repeat_x_times = round(map(pot_value,-80,end_knob,1,9));
         // store id value in driving pattern for light up both loop blocks
         for(int i  = current_level+1; i < rows; i++ ){
           int current_id = id_array [i][0];
@@ -168,8 +168,8 @@ void get_function_block_by_id(int id, int pot_value){
             // as long as there are blocks check if there is another loop_a block
             int current_id_section = round(floor((current_id/10)));
             if(current_id_section == loop_b){
-              pot_value = round(map(pot_array [i][0],begin_knob,end_knob,1,9)) ;
               
+              pot_value = round(map(pot_array [i][0],-80,end_knob,1,9)) ;
               robot_drive_pattern[current_level][1] = pot_value;
               robot_drive_pattern[current_level][2] = current_id;
               pot_array[i][0] = 0;
@@ -185,7 +185,7 @@ void get_function_block_by_id(int id, int pot_value){
         // this for loop searches down for the next value, if there is nothing to find its the closing part of the repeat
       }
       else if (pot_value != 0){
-        int repeat_x_times = round(map(pot_value,begin_knob,end_knob,1,9));
+        int repeat_x_times = round(map(pot_value,-80,end_knob,1,9));
         // store id value in driving pattern for light up both loop blocks
         for(int i  = current_level+1; i < rows; i++ ){
           int current_id = id_array [i][0];

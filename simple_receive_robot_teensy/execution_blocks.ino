@@ -23,13 +23,7 @@ handle loops
             Serial.print("start times to repeat = ");
             Serial.println(repeat_x_times);
 
-            // also turn off lights of block before this block
-            if(execution_row_counter > 0){
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
-            }
+            turn_lights_off_before_this_block();
 
 
             // turn on lights of start loop a block, end the end block, both light up, so we know its a loop
@@ -51,6 +45,7 @@ handle loops
               Serial.print(loop_a_counter);
               Serial.println(" more times");
               // repeat_x_times was 0 so this means we are at the end of the block
+              turn_lights_off_before_this_block();
               execution_row_counter = start_loop_a;
             }
             else if(loop_b_counter != 0){
@@ -58,11 +53,7 @@ handle loops
               // if this loop is inside another loop
               Serial.println("loop a was inside b loop so reset a loop");
 
-              // also turn off lights of block before this block
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
+              turn_lights_off_before_this_block();
 
               // turn both lights of loop blocks off
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
@@ -77,11 +68,8 @@ handle loops
               // turn both lights of loop blocks off
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
               Serial2.print(robot_drive_pattern[start_loop_a][6]);// start loop a id
-              // also turn off lights of block before this block
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
+
+              turn_lights_off_before_this_block();
 
 
             }
@@ -95,13 +83,7 @@ handle loops
             Serial.println(repeat_x_times);
 
 
-            // also turn off lights of block before this block
-            if(execution_row_counter > 0){
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
-            }
+            turn_lights_off_before_this_block();
 
             // its the first time we are here, set loop_a_counter
             // turn on lights of start loop a block, end the end block, both light up, so we know its a loop
@@ -120,6 +102,7 @@ handle loops
               Serial.print("go back to start loop b and repeat ");
               Serial.print(loop_b_counter);
               Serial.println(" more times");
+              turn_lights_off_before_this_block();
               // repeat_x_times was 0 so this means we are at the end of the block
               execution_row_counter = start_loop_b;
             }
@@ -132,28 +115,22 @@ handle loops
               // turn both lights of loop blocks off
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
               Serial2.print(robot_drive_pattern[start_loop_b][6]);// start loop a id
-              Serial.println("turn both lights off loop a");
+              Serial.println("turn both lights off loop b");
 
-              // also turn off lights of block before this block
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
+              turn_lights_off_before_this_block();
 
 
               // when a counter is not 0 this b loop is inside the a loop, reset loop b so that it will start over when a loop is restarted
             } 
             else if(loop_a_counter == 0){
               // turn both lights of loop blocks off
-              Serial.println("turn both lights off loop a");
+              Serial.println("turn both lights off loop b not inside other loop");
+              Serial.print("id end block is ");
+              Serial.println(robot_drive_pattern[execution_row_counter][6]);
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
               Serial2.print(robot_drive_pattern[start_loop_b][6]);// start loop a id
 
-              // also turn off lights of block before this block
-              int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
-              if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
-                Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
-              }
+              turn_lights_off_before_this_block();
 
             }
           }
@@ -205,7 +182,7 @@ handle loops
   }
   else{
     // we have no more functions so stop the loop
-    Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
+    turn_lights_off_before_this_block();
     in_execution = false;
     execution_row_counter = 0; // set execution row counter
     loop_a_counter = 0;
@@ -226,13 +203,26 @@ void turn_on_off_slave_indicator_led(){
   else{
     // check if previous block is a repeat block if that is the case, dont put its light of
     // previous block can also not be a speed block
+    turn_lights_off_before_this_block();
+    Serial2.print(robot_drive_pattern[execution_row_counter][6]);
+  }
+}
+
+
+
+void turn_lights_off_before_this_block(){
+  if(execution_row_counter != 0){
     int id_nummerater_previous_block = robot_drive_pattern[execution_row_counter-1][0];
     if(id_nummerater_previous_block != loop_a && id_nummerater_previous_block != loop_b && id_nummerater_previous_block != speed_function){
       Serial2.print(robot_drive_pattern[execution_row_counter-1][6]);
     }
-    Serial2.print(robot_drive_pattern[execution_row_counter][6]);
   }
+
 }
+
+
+
+
 
 
 
