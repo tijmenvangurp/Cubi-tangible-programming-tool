@@ -1,4 +1,4 @@
-void get_function_block_by_id(int id, int pot_value){
+void get_function_block_by_id(byte id, int pot_value){
   /*
   motor_assignment[0]= indication what variables there are
    2 = driving forward/backwards
@@ -25,14 +25,13 @@ void get_function_block_by_id(int id, int pot_value){
 
   robot_drive_pattern[current_level][0] = round(floor((id/10)));
   robot_drive_pattern[current_level][6] = id;
-  // Serial.print("inside function block id = ");
-  //Serial.println(robot_drive_pattern[current_level][6]);
+
   switch  (robot_drive_pattern[current_level][0]){
   case speed_function:
     {
-      global_speed_robot = round(map(pot_value, begin_knob, end_knob, minimum_speed, maximum_speed));//  speed block needs to be set global still
-      robot_drive_pattern[current_level][0] = 0;// if last block is an speed block be sure it is zero
-      robot_drive_pattern_counter --;// overwrite this part of the pattern      
+
+      // TODO speed block needs to be set global still
+
       break;
     }
   case driving_forwards_backwards:
@@ -43,9 +42,9 @@ void get_function_block_by_id(int id, int pot_value){
 
         //drive forward
         int time_to_drive_forward = round(map(pot_value,begin_knob,middle_knob,max_time,min_time));
-        //Serial.print("There was a forward block that should drive ");
-        // Serial.print(time_to_drive_forward);
-        // Serial.println(" Miliseconds");
+        Serial.print("There was a forward block that should drive ");
+        Serial.print(time_to_drive_forward);
+        Serial.println(" Miliseconds");
         // both motors should go forward
         robot_drive_pattern[current_level][1] = 1;
         robot_drive_pattern[current_level][2] = 1;
@@ -58,9 +57,9 @@ void get_function_block_by_id(int id, int pot_value){
         //drive backward
         // both motors should go backward
         int time_to_drive_backward = round(map(pot_value,middle_knob,end_knob,min_time,max_time));
-        //  Serial.print("There was a backward block that should drive ");
-        //  Serial.print(time_to_drive_backward);
-        //  Serial.println(" Miliseconds");
+        Serial.print("There was a backward block that should drive ");
+        Serial.print(time_to_drive_backward);
+        Serial.println(" Miliseconds");
         robot_drive_pattern[current_level][1] = 0;
         robot_drive_pattern[current_level][2] = 0;
         robot_drive_pattern[current_level][3] = time_to_drive_backward;
@@ -109,24 +108,18 @@ void get_function_block_by_id(int id, int pot_value){
       if (pot_value == 0){
         // we have a loop_a block without a nr, check if we are the last block in the loop or not
         for(int i  = current_level+1; i < rows; i++ ){
-          int current_id = id_array [i][0];
-          if(current_id != 0){
+          if(id_array [i][0] != 0){
             // as long as there are blocks check if there is another loop_a block
-            int current_id_section = round(floor((current_id/10)));
-
+            int current_id_section = round(floor((id_array [i][0]/10)));
             if(current_id_section == loop_a){
-              // we where not the last block in the loop so reverse the potvalues
               pot_value = round(map(pot_array [i][0],begin_knob,end_knob,1,9)) ;
-              // store id value in driving pattern for light up both loop blocks
               robot_drive_pattern[current_level][1] = pot_value;
-              robot_drive_pattern[current_level][2] = current_id;
               pot_array[i][0] = 0;
               break;
             }
           }
           else{
             robot_drive_pattern[current_level][1] = 0;// 0 on this place means end of loop
-
             // begin of loop a was already in the code so save it as a 0
             break;
           }
@@ -136,22 +129,6 @@ void get_function_block_by_id(int id, int pot_value){
       }
       else if (pot_value != 0){
         int repeat_x_times = round(map(pot_value,begin_knob,end_knob,1,9));
-        // store id value in driving pattern for light up both loop blocks
-        for(int i  = current_level+1; i < rows; i++ ){
-          int current_id = id_array [i][0];
-          if(current_id != 0){
-            int current_id_section = round(floor((current_id/10)));
-            if(current_id_section == loop_a){
-              robot_drive_pattern[current_level][2] = current_id;
-              break;
-            }
-          }
-          else{
-            Serial.println("Error no other loop block found");
-            break;
-          }
-        }
-
         robot_drive_pattern[current_level][1] = repeat_x_times;
       }
 
@@ -163,15 +140,12 @@ void get_function_block_by_id(int id, int pot_value){
       if (pot_value == 0){
         // we have a loop_a block without a nr, check if we are the last block in the loop or not
         for(int i  = current_level+1; i < rows; i++ ){
-          int current_id = id_array [i][0];
-          if(current_id != 0){
+          if(id_array [i][0] != 0){
             // as long as there are blocks check if there is another loop_a block
-            int current_id_section = round(floor((current_id/10)));
+            int current_id_section = round(floor((id_array [i][0]/10)));
             if(current_id_section == loop_b){
               pot_value = round(map(pot_array [i][0],begin_knob,end_knob,1,9)) ;
-              
               robot_drive_pattern[current_level][1] = pot_value;
-              robot_drive_pattern[current_level][2] = current_id;
               pot_array[i][0] = 0;
               break;
             }
@@ -186,21 +160,6 @@ void get_function_block_by_id(int id, int pot_value){
       }
       else if (pot_value != 0){
         int repeat_x_times = round(map(pot_value,begin_knob,end_knob,1,9));
-        // store id value in driving pattern for light up both loop blocks
-        for(int i  = current_level+1; i < rows; i++ ){
-          int current_id = id_array [i][0];
-          if(current_id != 0){
-            int current_id_section = round(floor((current_id/10)));
-            if(current_id_section == loop_b){
-              robot_drive_pattern[current_level][2] = current_id;
-              break;
-            }
-          }
-          else{
-            Serial.println("Error no other loop block found");
-            break;
-          }
-        }
         robot_drive_pattern[current_level][1] = repeat_x_times;
       }
 
@@ -209,18 +168,12 @@ void get_function_block_by_id(int id, int pot_value){
     }
   default:
     {
-      //   Serial.println("error in get function block by id");
+      Serial.println("error in get function block by id");
       break;
     }
   }
   robot_drive_pattern_counter++;// next level will be saved on new line
 
 }
-
-
-
-
-
-
 
 

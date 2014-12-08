@@ -25,7 +25,7 @@ int collum_counter = 0;
 int row_counter = 0;
 String robot_message = "";
 String slave_summary = "";
-byte potmeter_values_to_send [64];
+byte potmeter_values_to_send [100];
 int potmeter_array_counter = 0;
 
 enum search_direction {
@@ -41,7 +41,7 @@ unsigned long waiting_for_id_timeout = 0;
 unsigned long no_pulse_response_timeout = 0;
 unsigned long i2c_communications_delay = 0; 
 boolean waiting_for_id = false ;
-boolean send_once = true;
+//boolean send_once = true;
 
 
 //button to start

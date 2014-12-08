@@ -22,6 +22,7 @@ void handle_pot_message (){
     Serial.println("End pot message");
    // Serial2.print('P');
     waiting_for_pot_values = false;
+    start_constructing_patern = true;
     break;
   default:
     Serial.println(received_byte);

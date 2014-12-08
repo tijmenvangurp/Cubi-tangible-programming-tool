@@ -3,7 +3,7 @@ const byte master_address = 10;
 const byte led_pin = 13;
 
 // BLOCK ID
-const byte block_id = 41;
+const byte block_id = 70;
 
 boolean message_recieved = false;
 
@@ -134,10 +134,10 @@ void loop(){
         // Serial.println("WRONG SO BLINK DUDE");
         break;
       case 'G':
-      if(amount_red > 0){
-        amount_red = 0;
-        amount_green = 255;
-        amount_blue = 0;
+      if(amount_red < 100){
+        amount_red = 255;
+        amount_green = 0;
+        amount_blue = 255;
       }else{
         amount_red = 80;
         amount_green = 255;

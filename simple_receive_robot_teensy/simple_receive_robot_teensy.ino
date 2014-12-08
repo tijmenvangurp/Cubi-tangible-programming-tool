@@ -3,7 +3,7 @@ const byte collums = 5;
 byte id_array [rows][collums];
 int pot_array [rows][collums];
 const byte pattern_rows = 18;
-const byte pattern_collums = 6;
+const byte pattern_collums = 7;
 int robot_drive_pattern [pattern_rows][pattern_collums];
 int robot_drive_pattern_counter = 0;
 
@@ -54,6 +54,8 @@ const int middle_knob = 513;
 const int end_knob = 1025;
 const int begin_knob = 1;
 
+boolean start_constructing_patern = false;
+
 
 unsigned long drive_timeout = 0;
 String incomming_id = "";
@@ -79,14 +81,14 @@ void loop(){
       handle_id_message();
     }
   }
-  else if(id_array[0][0] =! 0){
-    // robot execution array is filled, important TODO clear out the array here
-    //construct_driving_pattern();
-    // we are ready constructing the driving pattern so the robot can start
-  }
+  else if(id_array[0][0] != 0 && start_constructing_patern){
+     // we are ready constructing the driving pattern so the robot can start
+    construct_driving_pattern();
+   }
 
   if(execute_driving){
-    // execution_blocks();
+     // TODO: when loop block is pressed this should continue to runn
+     execution_blocks();
   }
 
 }
