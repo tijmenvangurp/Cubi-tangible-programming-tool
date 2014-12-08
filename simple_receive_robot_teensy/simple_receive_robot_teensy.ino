@@ -7,14 +7,14 @@ const byte pattern_collums = 7;
 int robot_drive_pattern [pattern_rows][pattern_collums];
 int robot_drive_pattern_counter = 0;
 
-static byte normal_speed = 255;
-static byte minimum_speed = 0;
+static byte normal_speed = 190;
+static byte minimum_speed = 100;
 static byte maximum_speed = 255;
-byte global_speed_robot = 255;
+byte global_speed_robot = normal_speed;
 byte local_speed_robot [2] = {
   0,0};
 
-byte local_speed_set = 255;
+byte local_speed_set = normal_speed;
 
 int collum_counter = 0;
 int row_counter = 0;
@@ -36,6 +36,8 @@ boolean loop_b_running = false;
 byte start_loop_a = 0;
 byte start_loop_b = 0;
 
+boolean loop_all = false;
+
 // constant names for driving pattern array
 const byte function_id_block = 0;
 const byte left_wheel_direction = 1;
@@ -48,8 +50,8 @@ const byte backwards = 0;
 
 
 // changing the time will influence the distance robot will drive
-const int max_time = 5000;
-const int min_time = 100;
+const int max_time = 7000;
+const int min_time = 500;
 const int middle_knob = 513;
 const int end_knob = 1024;
 const int begin_knob = 1;
@@ -59,9 +61,20 @@ boolean start_constructing_patern = false;
 
 unsigned long drive_timeout = 0;
 String incomming_id = "";
+// 23,22,21,20
+const int AIA = 23;  // (pwm) pin 9 connected to pin A-IA 
+const int AIB = 20;  // (pwm) pin 5 connected to pin A-IB 
+const int BIA = 22; // (pwm) pin 10 connected to pin B-IA  
+const int BIB = 21;  // (pwm) pin 6 connected to pin B-IB 
+
+
 void setup(){
   Serial.begin(9600);
   Serial2.begin(9600);
+  pinMode(AIA, OUTPUT); // set pins to output
+  pinMode(AIB, OUTPUT);
+  pinMode(BIA, OUTPUT);
+  pinMode(BIB, OUTPUT);
   Serial.println("Robot started");
 }
 void loop(){
@@ -72,7 +85,7 @@ void loop(){
       waiting_for_pot_values = false;
     }
   }
-  
+
   if (Serial2.available() >= 2){
     if(waiting_for_pot_values){
       handle_pot_message();
@@ -82,15 +95,16 @@ void loop(){
     }
   }
   else if(id_array[0][0] != 0 && start_constructing_patern){
-     // we are ready constructing the driving pattern so the robot can start
+    // we are ready constructing the driving pattern so the robot can start
     construct_driving_pattern();
-   }
+  }
 
   if(execute_driving){
-     // TODO: when loop block is pressed this should continue to runn
-     execution_blocks();
+    // TODO: when loop block is pressed this should continue to runn
+    execution_blocks();
   }
 
 }
+
 
 

@@ -20,7 +20,12 @@ boolean message_recieved = false;
 boolean line_ready = false;
 boolean waiting_to_send_pot_values = false;
 boolean errors = false;
+int neopixel_counter = 0;
+boolean neopixel_on = true;
+boolean start_neopixel_animation = false;
+unsigned long neopixel_animation_timout = 0;
 
+boolean in_loop = false;
 int collum_counter = 0;
 int row_counter = 0;
 String robot_message = "";
@@ -82,6 +87,7 @@ void loop(){
     char robot_message = Serial.read();
     // robot sends a go once it has received all id values so we can send potvalues
     if(robot_message == 'G' ){
+
       waiting_to_send_pot_values = false;
       for(int i = 0; i < sizeof(potmeter_values_to_send); i++ ){
         Serial.write(potmeter_values_to_send[i]);
@@ -93,6 +99,11 @@ void loop(){
          */
         // semd all the values from potmeter
         if(potmeter_values_to_send[i] == lowByte(5000)){
+          for(int i=0;i<NUMPIXELS;i++){
+            pixels.setPixelColor(i, pixels.Color(100,100,100)); 
+            pixels.show(); // This sends the updated pixel color to the hardware.
+          }
+          start_neopixel_animation = true;
           break;
           // if we have the last byte we can stop sending, the array of bytes is filled with 0 after 5000
         }
@@ -106,11 +117,46 @@ void loop(){
     robot_message = Serial.read();
     id_to_light_up += robot_message;
     int active_block = id_to_light_up.toInt();
-    error_message(active_block,'G');
+    if(active_block != 88){
+      error_message(active_block,'G');
+    }
+    else{
+      start_neopixel_animation = false;
+      neopixel_on = true;
+      for(int i=0;i<NUMPIXELS;i++){
+        pixels.setPixelColor(i, pixels.Color(100,100,100)); 
+        pixels.show(); // This sends the updated pixel color to the hardware.
+      }
+    }
     //Serial.print("make block nr ");
-   // Serial.print(active_block);
+    // Serial.print(active_block);
     //Serial.println(" green");
   }
+  if(start_neopixel_animation || in_loop){
+
+    if(neopixel_counter == NUMPIXELS){
+      neopixel_counter = 0;
+      if(neopixel_on){
+        neopixel_on = false;
+      }
+      else{
+        neopixel_on = true;
+      }
+    }
+    if(millis() - neopixel_animation_timout > 250){
+      neopixel_animation_timout = millis();
+      if(neopixel_on){
+        pixels.setPixelColor(neopixel_counter, pixels.Color(0,100,0)); 
+        pixels.show(); // This sends the updated pixel color to the hardware.
+      }
+      else{
+        pixels.setPixelColor(neopixel_counter, pixels.Color(0,0,0)); 
+        pixels.show(); // This sends the updated pixel color to the hardware.
+      }
+      neopixel_counter++;
+    }
+  }
+
   check_buttons();
   if(millis() - i2c_communications_delay > 500){// once we have finished all the important jobs ge give 500 miliseconds the time wherein the line can be broken, 
     //the larger the number the lower the chance i2c gets disturbed by a disconnection but the slower the discovery protocol works
@@ -132,6 +178,17 @@ void send_pulses_down() {
   delayMicroseconds(30);
   digitalWrite(pulse_line_down, LOW);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@ const byte master_address = 10;
 const byte led_pin = 13;
 
 // BLOCK ID
-const byte block_id = 60;
+const byte block_id = 21;
 
 boolean message_recieved = false;
 
@@ -134,17 +134,24 @@ void loop(){
         // Serial.println("WRONG SO BLINK DUDE");
         break;
       case 'G':
-      if(amount_red > 20){
-        amount_red = 0;
-        amount_green = 0;
-        amount_blue = 255;
-      }else{
-        amount_red = 80;
-        amount_green = 255;
-        amount_blue = 255;
-            }
-     
+        if(amount_red > 70){
+          amount_red = 0;
+          amount_green = 255;
+          amount_blue = 0;
+        }
+        else{
+          amount_red = 80;
+          amount_green = 255;
+          amount_blue = 255;
+        }
+
         break;
+
+      case 'W':
+          amount_red = 80;
+          amount_green = 255;
+          amount_blue = 255;
+          break;
       }
     }
   }
@@ -155,8 +162,8 @@ void loop(){
     else if(listen_for_pulses){
       listen_for_pulses_from_direction();
     }
-   
-   if(!done_with_green){
+
+    if(!done_with_green){
       if(start_green){
         error_blink_timout = millis();
         start_green = false;
@@ -262,6 +269,7 @@ void rgb_off(){
   analogWrite(g,0);
   analogWrite(b,0);
 }
+
 
 
 

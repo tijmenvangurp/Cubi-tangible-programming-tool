@@ -183,14 +183,16 @@ handle loops
   else{
     // we have no more functions so stop the loop
     turn_lights_off_before_this_block();
+    Serial2.print("88");
     in_execution = false;
     execution_row_counter = 0; // set execution row counter
     loop_a_counter = 0;
     loop_b_counter = 0;
     loop_a_running = false;
     loop_b_running = false;
-
-    execute_driving = false;
+    if(loop_all == false){
+      execute_driving = false;
+    }
     // TODO when master block is in repeat mode keep execute driving
   }
 
@@ -219,6 +221,7 @@ void turn_lights_off_before_this_block(){
   }
 
 }
+
 
 
 
