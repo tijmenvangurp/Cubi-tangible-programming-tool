@@ -50,8 +50,11 @@ const byte backwards = 0;
 
 
 // changing the time will influence the distance robot will drive
-const int max_time = 7000;
-const int min_time = 500;
+const int max_time = 3000;
+const int max_time_turning = 700;
+const int min_time_turning = 50;
+
+const int min_time = 100;
 const int middle_knob = 513;
 const int end_knob = 1024;
 const int begin_knob = 1;
@@ -69,22 +72,22 @@ const int BIB = 21;  // (pwm) pin 6 connected to pin B-IB
 
 
 void setup(){
-  Serial.begin(9600);
+  //Serial.begin(9600);
   Serial2.begin(9600);
   pinMode(AIA, OUTPUT); // set pins to output
   pinMode(AIB, OUTPUT);
   pinMode(BIA, OUTPUT);
   pinMode(BIB, OUTPUT);
-  Serial.println("Robot started");
+  //Serial.println("Robot started");
 }
 void loop(){
-  if(Serial.available()> 0){
-    char k = Serial.read();
-    Serial.println(k);
-    if(k == 'R'){
-      waiting_for_pot_values = false;
-    }
-  }
+//  if(Serial.available()> 0){
+//    char k = Serial.read();
+//    Serial.println(k);
+//    if(k == 'R'){
+//      waiting_for_pot_values = false;
+//    }
+//  }
 
   if (Serial2.available() >= 2){
     if(waiting_for_pot_values){

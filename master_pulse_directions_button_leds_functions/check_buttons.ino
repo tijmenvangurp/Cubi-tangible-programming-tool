@@ -7,6 +7,9 @@ void check_buttons(){
   button_state_start = digitalRead(button_start);
   if(button_state_start != lastButtonState_start && button_state_start == HIGH){
     // Serial.println("Start button pressed");
+    // TODO
+    // set code in execution, wait untill we have received a command that it is finnished untill we send new pot data
+    // send stop command when in running and button is pressed again.
     if(errors == false && waiting_to_send_pot_values == false){
       // but all lights to white
       Wire.beginTransmission(0x0); // broadcast to all ID's

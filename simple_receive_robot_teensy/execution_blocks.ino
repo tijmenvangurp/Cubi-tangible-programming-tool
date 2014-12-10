@@ -18,10 +18,10 @@ handle loops
         int repeat_x_times = robot_drive_pattern[execution_row_counter][1]; // if repeat_x_times is not 0 than its start of loop a
 
         if(current_robot_function == loop_a ){
-          Serial.print("loop_a ");
+          // Serial.print("loop_a ");
           if(repeat_x_times != 0 && loop_a_running == false){
-            Serial.print("start times to repeat = ");
-            Serial.println(repeat_x_times);
+            //  Serial.print("start times to repeat = ");
+            // Serial.println(repeat_x_times);
 
             turn_lights_off_before_this_block();
 
@@ -36,14 +36,14 @@ handle loops
             loop_a_running = true;
           }
           else if(repeat_x_times == 0){
-            Serial.println("end ");
+            // Serial.println("end ");
 
             // this is the last block of the loop so start over if loopcounter is not yet 0
             if(loop_a_counter != 0){
               loop_a_counter --;
-              Serial.print("go back to start loop a and repeat ");
-              Serial.print(loop_a_counter);
-              Serial.println(" more times");
+              //              Serial.print("go back to start loop a and repeat ");
+              //              Serial.print(loop_a_counter);
+              //              Serial.println(" more times");
               // repeat_x_times was 0 so this means we are at the end of the block
               turn_lights_off_before_this_block();
               execution_row_counter = start_loop_a;
@@ -51,7 +51,7 @@ handle loops
             else if(loop_b_counter != 0){
               // done with the loop
               // if this loop is inside another loop
-              Serial.println("loop a was inside b loop so reset a loop");
+              // Serial.println("loop a was inside b loop so reset a loop");
 
               turn_lights_off_before_this_block();
 
@@ -77,10 +77,10 @@ handle loops
         }
         else{
           // it was loop_b
-          Serial.print("loop_b ");
+          //   Serial.print("loop_b ");
           if(repeat_x_times != 0 && loop_b_running == false){
-            Serial.print("start times to repeat = ");
-            Serial.println(repeat_x_times);
+            // Serial.print("start times to repeat = ");
+            // Serial.println(repeat_x_times);
 
 
             turn_lights_off_before_this_block();
@@ -95,13 +95,13 @@ handle loops
             loop_b_running = true;
           }
           else if(repeat_x_times == 0){
-            Serial.println("end ");
+            // Serial.println("end ");
             // this is the last block of the loop so start over if loopcounter is not yet 0
             if(loop_b_counter != 0){
               loop_b_counter --;
-              Serial.print("go back to start loop b and repeat ");
-              Serial.print(loop_b_counter);
-              Serial.println(" more times");
+              //  Serial.print("go back to start loop b and repeat ");
+              // Serial.print(loop_b_counter);
+              // Serial.println(" more times");
               turn_lights_off_before_this_block();
               // repeat_x_times was 0 so this means we are at the end of the block
               execution_row_counter = start_loop_b;
@@ -110,12 +110,12 @@ handle loops
               // done with the loop
               // if this loop is inside another loop
               loop_b_running = false;
-              Serial.println("loop b was inside a loop so reset b loop");
+          //    Serial.println("loop b was inside a loop so reset b loop");
 
               // turn both lights of loop blocks off
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
               Serial2.print(robot_drive_pattern[start_loop_b][6]);// start loop a id
-              Serial.println("turn both lights off loop b");
+           //   Serial.println("turn both lights off loop b");
 
               turn_lights_off_before_this_block();
 
@@ -124,9 +124,9 @@ handle loops
             } 
             else if(loop_a_counter == 0){
               // turn both lights of loop blocks off
-              Serial.println("turn both lights off loop b not inside other loop");
-              Serial.print("id end block is ");
-              Serial.println(robot_drive_pattern[execution_row_counter][6]);
+//              Serial.println("turn both lights off loop b not inside other loop");
+//              Serial.print("id end block is ");
+//              Serial.println(robot_drive_pattern[execution_row_counter][6]);
               Serial2.print(robot_drive_pattern[execution_row_counter][6]);// end of loop id 
               Serial2.print(robot_drive_pattern[start_loop_b][6]);// start loop a id
 
@@ -148,23 +148,23 @@ handle loops
           turn_on_off_slave_indicator_led();
 
         int current_function_in_execution = robot_drive_pattern[execution_row_counter][0];
-        Serial.println(robot_drive_pattern[execution_row_counter][6]);
+    //    Serial.println(robot_drive_pattern[execution_row_counter][6]);
 
         int motor_left_direction = robot_drive_pattern[execution_row_counter][left_wheel_direction];
         int motor_right_direction = robot_drive_pattern[execution_row_counter][right_wheel_direction];
         int motor_speed_left_wheel =  robot_drive_pattern[execution_row_counter][left_wheel_speed];
         int motor_speed_right_wheel = robot_drive_pattern[execution_row_counter][right_wheel_speed];
-        Serial.print("Driving for ");
-        Serial.print(timeout_current_function);
-        Serial.println(" miliseconds");
-        Serial.print("left wheel direction: ");
-        Serial.print(motor_left_direction);
-        Serial.print(" , right wheel direction: ");
-        Serial.print(motor_right_direction);
-        Serial.print(" , speed left wheel: ");
-        Serial.print(motor_speed_left_wheel);
-        Serial.print(" , speed right wheel: ");
-        Serial.println(motor_speed_right_wheel);
+//        Serial.print("Driving for ");
+//        Serial.print(timeout_current_function);
+//        Serial.println(" miliseconds");
+//        Serial.print("left wheel direction: ");
+//        Serial.print(motor_left_direction);
+//        Serial.print(" , right wheel direction: ");
+//        Serial.print(motor_right_direction);
+//        Serial.print(" , speed left wheel: ");
+//        Serial.print(motor_speed_left_wheel);
+//        Serial.print(" , speed right wheel: ");
+//        Serial.println(motor_speed_right_wheel);
 
         drive(motor_left_direction, motor_right_direction ,motor_speed_left_wheel,motor_speed_right_wheel);
         drive_timeout = millis();
@@ -184,6 +184,7 @@ handle loops
     // we have no more functions so stop the loop
     turn_lights_off_before_this_block();
     Serial2.print("88");
+    drive(0,0,0,0);// stop driving
     in_execution = false;
     execution_row_counter = 0; // set execution row counter
     loop_a_counter = 0;
@@ -221,6 +222,7 @@ void turn_lights_off_before_this_block(){
   }
 
 }
+
 
 
 

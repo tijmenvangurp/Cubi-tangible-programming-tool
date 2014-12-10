@@ -13,12 +13,12 @@ just here for refference
   int level = robot_drive_pattern_counter;
   int combined_id_nummerator = robot_drive_pattern[level][0] + robot_drive_pattern[level+1][0];
   // in case one is forward/backwards and the otherone left/right, make a forwards turn, or backwards turn
- // Serial.print("combined_id_nummerator = ");
- // Serial.println(combined_id_nummerator);
+  // Serial.print("combined_id_nummerator = ");
+  // Serial.println(combined_id_nummerator);
   switch (combined_id_nummerator){
   case driving_forwards_backwards + driving_forwards_backwards:
     {
-      Serial.println("there where 2 forward/backwards blocks");
+     // Serial.println("there where 2 forward/backwards blocks");
       if(robot_drive_pattern[level][left_wheel_direction] == robot_drive_pattern[level+1][left_wheel_direction]){
         // in case both are driving forward or both are driving backwards: add the time driving forward/backwards
         robot_drive_pattern[level][driving_time] += robot_drive_pattern[level+1][driving_time];
@@ -64,10 +64,10 @@ just here for refference
 
   case driving_left_rigt + driving_forwards_backwards:
     {
-      Serial.println("one is forward/backwards the otherone is left/right");
+      //Serial.println("one is forward/backwards the otherone is left/right");
       // one is forward/backwards the otherone is turning
       if(robot_drive_pattern[level][0] == driving_forwards_backwards){
-        Serial.println("level block was forward/backwards");
+       // Serial.println("level block was forward/backwards");
         // level block was forward/backwards
         // high time driving forward, and high time turning, is long corner allmost driving a circle --> time to execute is long, speed difference motors is not to big
         // low time to drive forward and high time turning, is short corner --> time to execute is short, speed difference motors is big
@@ -75,25 +75,25 @@ just here for refference
         //TODO on master block check if there more than 3 blocks when that is the case the combination may only be forward/backward block left/right block and speed block
 
         // left/right block knob will make the difference in speed from motor
-        int speed_setting = round(map(robot_drive_pattern[level+1][driving_time],min_time,max_time,local_speed_set,0));
+        int speed_setting = round(map(robot_drive_pattern[level+1][driving_time],min_time_turning,max_time_turning,local_speed_set,0));
         if(robot_drive_pattern[level+1][left_wheel_direction] == backwards){
           // turning left
-          Serial.println("turning left");
+        //  Serial.println("turning left");
           robot_drive_pattern[level][left_wheel_speed] = speed_setting;
         }
         else{
           // turning right
-          Serial.println("turning right");
+         // Serial.println("turning right");
           robot_drive_pattern[level][right_wheel_speed] = speed_setting;
         }
       }
       else{
         // level block was left/right
-        Serial.println("level block was left/right");
-        int speed_setting = round(map(robot_drive_pattern[level][driving_time],min_time,max_time,local_speed_set,0));
+      //  Serial.println("level block was left/right");
+        int speed_setting = round(map(robot_drive_pattern[level][driving_time],min_time_turning,max_time_turning,local_speed_set,0));
         if(robot_drive_pattern[level][left_wheel_direction] == backwards){
           // turning left
-          Serial.println("turning left");
+         // Serial.println("turning left");
           robot_drive_pattern[level][function_id_block] = driving_forwards_backwards;
           robot_drive_pattern[level][driving_time] = robot_drive_pattern[level+1][driving_time];
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
@@ -102,7 +102,7 @@ just here for refference
         }
         else{
           // turning right
-          Serial.println("turning right");
+         // Serial.println("turning right");
           robot_drive_pattern[level][function_id_block] = driving_forwards_backwards;
           robot_drive_pattern[level][driving_time] = robot_drive_pattern[level+1][driving_time];
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
@@ -134,27 +134,21 @@ just here for refference
           robot_drive_pattern[level][driving_time] = abs(time_difference);
           robot_drive_pattern[level][left_wheel_direction] = robot_drive_pattern[level+1][left_wheel_direction];
           robot_drive_pattern[level][right_wheel_direction] = robot_drive_pattern[level+1][right_wheel_direction];
-
         }
-
       }
 
       break;
     }
-default:{
-Serial.print("Something went wrong in combining functions combined id nummerator  = ");
-Serial.println(robot_drive_pattern[level][0]);
-Serial.println(robot_drive_pattern[level+1][0]);
-Serial.println(level);
-
-
-}
-
+  default:
+    {
+     // Serial.print("Something went wrong in combining functions combined id nummerator  = ");
+      Serial.println(robot_drive_pattern[level][0]);
+      Serial.println(robot_drive_pattern[level+1][0]);
+      Serial.println(level);
+    }
   }
-  Serial.println("Finished combining driving blocks");
-
+ // Serial.println("Finished combining driving blocks");
   robot_drive_pattern[level+1][function_id_block] = 0;
   robot_drive_pattern[level+1][driving_time] = 0;// if driving time = 0 it is a loop block,
-
-
 }
+
